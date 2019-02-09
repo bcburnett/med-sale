@@ -1,9 +1,9 @@
-var mysql = require("mysql");
-var dbconfig = require("../config/database");
-var ppconfig = require("../config/paypal");
+const mysql = require("mysql");
+const dbconfig = require("../config/database");
+const ppconfig = require("../config/paypal");
 const paypal = require("paypal-rest-sdk");
 
-var connection = mysql.createConnection(dbconfig.connection);
+const connection = mysql.createConnection(dbconfig.connection);
 connection.query("USE " + dbconfig.database);
 paypal.configure(ppconfig);
 
