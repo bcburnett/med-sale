@@ -5,6 +5,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var morgan = require('morgan');
 var app = express();
+var MySQLStore = require('express-mysql-session')(session);
 var port = process.env.PORT || 8080;
 
 var passport = require('passport');
