@@ -16,6 +16,7 @@
     <% if(rank != 'user') { %>
     <a href="/home">BACK TO CONTROL PANEL</a>
     <% } %>
+    <% if(data.length > 0) {%>
     <h3>Your purchases</h3>
     <table class="table">
       <tr>
@@ -25,10 +26,10 @@
         <th>keytext</th>
 
       </tr>
-      <% if(data.length > 0) {for({orderNumber, orderDate, keytext, product} of data) {%>
+      <% for({orderNumber, orderDate, keytext, product} of data) {%>
       <tr>
         <td><%= product %></td>
-        <td><%= orderNumber.substring(0,10)+'...' %></td>
+        <td title="<%= orderNumber %>"><%= orderNumber.substring(0,10)+'...' %></td>
         <td><%= orderDate.toString().substring(3,15) %></td>
         <td><%= keytext %></td>
       </tr>
