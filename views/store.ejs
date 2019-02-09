@@ -1,0 +1,37 @@
+<%- include header.ejs %>
+<h2>Welcome back <%= name %></h2>
+<% if(message.length > 0) { %>
+  <div class="alert alert-danger"><%= message %></div>
+ <% } %>
+
+    <form action="/pay" method="post">
+      <select name="product" id="product" >
+          <option value="med-tech software key">med-tech software key</option>
+          <option value="med-line software key">med-line software key</option>
+      </select>
+    <h2>Buy For $25.00</h2>
+      <input type="submit" value="Buy" />
+    </form>
+    <a href="/logout">LOGOUT</a>
+    <% if(rank != 'user') { %>
+    <a href="/home">BACK TO CONTROL PANEL</a>
+    <% } %>
+    <h3>Your purchases</h3>
+    <table class="table">
+      <tr>
+        <th>product</th>
+        <th>orderNumber</th>
+        <th>orderDate</th>
+        <th>keytext</th>
+
+      </tr>
+      <% if(data.length > 0) {for({orderNumber, orderDate, keytext, product} of data) {%>
+      <tr>
+        <td><%= product %></td>
+        <td><%= orderNumber.substring(0,10)+'...' %></td>
+        <td><%= orderDate.toString().substring(3,15) %></td>
+        <td><%= keytext %></td>
+      </tr>
+      <% }} %>
+    </table>
+    <%- include footer.ejs %>

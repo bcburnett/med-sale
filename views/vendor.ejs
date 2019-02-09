@@ -1,0 +1,50 @@
+<%- include header.ejs %>
+
+      <% if(message.length > 0) { %>
+        <div class="alert alert-danger"><%= message %></div>
+       <% } %>
+   <h2>Welcome back <%= name %></h2>
+   <a href="/logout">LOGOUT</a>
+   <a href="/store">GO TO STORE</a>
+
+
+   <h3>Your Products</h3>
+    <table class="table">
+      <tr>
+        <th> productCode </th>
+        <th> productName </th>
+        <th> productKey </th>
+        <th> productVendor </th>
+        <th> productDescription </th>
+        <th> buyPrice </th>
+        <th> salesOrder </th>
+      </tr>
+      <% if(data.length > 0) {for({productCode,productName , productKey, productVendor,productDescription ,buyPrice ,salesOrder} of data) {%>
+      <tr>
+        <td><%= productCode %></td>
+        <td><%= productName %></td>
+        <td><%= productKey %></td>
+        <td><%= productVendor %></td>
+        <td><%= productDescription %></td>
+        <td><%= buyPrice %></td>
+        <td><%= salesOrder %></td>
+      </tr>
+      <% }} %>
+    </table>
+
+    <h2>add a new product below</h2>
+
+   <form action="/vendorProductAdd" method="post"  name="myForm">
+    <% let fields = ['productName', 'productKey', 'productDescription', 'buyPrice']
+    fields.forEach(e=>{%>
+    <div class="form-group">
+     <label><%= e %></label>
+     <input type="text" class="form-control" name="<%= e %>"id="<%= e %>" value="<%= body[e] %>" required>
+    </div>
+    <% })%>
+    <button type="submit" class="btn btn-succcess btn-lg">Submit</button>
+   </form>
+
+
+ <%- include footer.ejs %>
+

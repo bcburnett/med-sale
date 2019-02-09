@@ -1,0 +1,49 @@
+{
+  "sqltools.connections": [
+    {
+      "askForPassword": false,
+      "connectionTimeout": 15,
+      "database": "nodelogin",
+      "dialect": "MySQL",
+      "name": "mysql",
+      "password": "2600",
+      "port": 3306,
+      "server": "127.0.0.1",
+      "username": "root"
+    },
+    {
+      "askForPassword": true,
+      "connectionTimeout": 15,
+      "database": "nodelogin",
+      "dialect": "MySQL",
+      "name": "localhost",
+      "port": 3306,
+      "server": "localhost",
+      "username": "root"
+    },
+    {
+      "askForPassword": false,
+      "connectionTimeout": 15,
+      "database": "nodelogin",
+      "dialect": "MySQL",
+      "name": "nodelogin",
+      "password": "2600",
+      "port": 3306,
+      "server": "localhost",
+      "username": "root"
+    },
+    {
+      "askForPassword": false,
+      "connectionTimeout": 15,
+      "database": "d31toe502v0g2s1q",
+      "dialect": "MySQL",
+      "name": "heroku-mysql",
+      "password": "yrku3yufv77qk7mw",
+      "port": 3306,
+      "server": "axxb6a0z2kydkco3.cbetxkdyhwsb.us-east-1.rds.amazonaws.com",
+      "username": "aa24cx65ce9csdww"
+    }
+  ],
+  "editor.tabSize": 2,
+  "editor.cursorStyle": "underline"
+}
