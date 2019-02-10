@@ -1,29 +1,32 @@
-const mysql = require("mysql");
-const dbconfig = require("../config/database");
+const mysql = require("promise-mysql");
+const dbconfig = require("../config/database").config;
 const ppconfig = require("../config/paypal");
 const paypal = require("paypal-rest-sdk");
+let connection
 
 
-const connection = mysql.createConnection(dbconfig.connection);
-connection.query("USE " + dbconfig.database);
+
 paypal.configure(ppconfig);
+let baseurl
 
-module.exports = (req, res) => {
+module.exports = async (req, res) => {
+  try{  connection = await mysql.createConnection(dbconfig)} catch (e){console.log(e,'ERROR PAYJS LINE 12')}
+
   let product = req.body.product;
-  const baseurl=req.protocol+"://"+req.headers.host
-  connection.query(
-    `select * from products where salesOrder = 'null' and productName = ? limit 1 `,
-    [product],
-    (e, r, f) => {
+  console.log(req.headers.host)
+  baseurl="https://"+req.headers.host
 
-      if (!r[0]) {
+
+    const products = await connection.query(`select * from products where salesOrder = 'null' and productName = ? limit 1 `,[product])
+    console.log(products)
+      if (!products[0]) {
         req.session.message = "We're sorry We are out of Stock";
         res.redirect("/home");
         return;
       }
 
       req.session.message = null;
-      r = r[0];
+      r = products[0];
       const create_payment_json = {
         intent: "sale",
         payer: {
@@ -68,5 +71,3 @@ module.exports = (req, res) => {
         }
       });
     }
-  );
-};

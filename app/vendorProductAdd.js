@@ -1,45 +1,33 @@
-var mysql = require('mysql');
-var dbconfig = require('../config/database');
-var connection = mysql.createConnection(dbconfig.connection);
+var mysql = require("promise-mysql");
+var dbconfig = require("../config/database").config;
+let connection;
 
-connection.query('USE ' + dbconfig.database);
-module.exports = function(req, res){
-  req.checkBody('productName','Name field is required').notEmpty().isLength({min:5});
-    req.checkBody('productKey','productKey field is required').notEmpty();
-    req.checkBody('productDescription','productDescription field is required').notEmpty();
-    req.checkBody('buyPrice','buyPrice field is required').notEmpty().isDecimal();
+module.exports = async function(req, res) {
 
-    if(req.validationErrors()){
-      res.render('vendor.ejs', {
-        user:req.user,
-        message:req.validationErrors().map(e=>e.msg),
-        data:row||[],
-        body:req.body,
-        name:req.user.username||"name"
-       })
-    }
-    let row = []
-    let b = req.body
-    connection.query(`
-    INSERT INTO products (productName, productKey, productVendor, productDescription, buyPrice,salesOrder) VALUES
-( ?, ?, ?, ?, ?,?)`, [b.productName,b.productKey,req.user.id,b.productDescription,b.buyPrice,"null"],(e,r)=>{
-  let message =''
-  if(e) {
-    message = JSON.stringify(e)
-    res.render('vendor.ejs', {
-      user:req.user,
-      message:message,
-      data:row||[],
-      body:req.body,
-      name:req.user.username||"name"
-     })
-    return
-  }
+req
+  .checkBody("productName", "Name field is required")
+  .notEmpty()
+req.checkBody("productKey", "productKey field is required").notEmpty();
+req
+  .checkBody("productDescription", "productDescription field is required")
+  .notEmpty();
+req
+  .checkBody("buyPrice", "buyPrice field is required")
+  .notEmpty()
 
-res.redirect('/home')
-})
+let row = [];
+let b = req.body;
 
-  //  console.log(req.user,req.session)
+try {
+  connection = await mysql.createConnection(dbconfig);
+  console.log(connection)
+  try {
+    console.log(connection)
+    let products = await connection.query(`INSERT INTO products (productName, productKey, productVendor, productDescription, buyPrice,salesOrder) VALUES( ?, ?, ?, ?, ?,?)`,[b.productName,b.productKey,req.user.id,b.productDescription,b.buyPrice,"null"] );
+    let message = "";
+    res.redirect("/home");
 
-
+  }catch(e){console.log(e)}
+} catch (e) {console.log(e)};
 }
+

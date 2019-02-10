@@ -14,7 +14,7 @@
         <th> rank </th>
         <th> id </th>
       </tr>
-      <% for({username,rank,id} of users) {%>
+      <% for({username,rank,id,vendor} of users) {%>
       <tr>
           <td><%= username %></td>
           <td>
@@ -26,6 +26,7 @@
 
           </td>
           <td><%= id %></td>
+          <td><%= vendor %></td>
       </tr>
       <% } %>
     </table>

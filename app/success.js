@@ -1,15 +1,15 @@
-var mysql = require("mysql");
-var dbconfig = require("../config/database");
+var mysql = require("promise-mysql");
+var dbconfig = require("../config/database").config;
 var ppconfig = require("../config/paypal");
-var data = require("../config/data");
-var connection = mysql.createConnection(dbconfig.connection);
 const paypal = require("paypal-rest-sdk");
 const uuidv1 = require("uuid/v1");
-
 paypal.configure(ppconfig);
-connection.query("USE " + dbconfig.database);
+let connection
 
-module.exports = (req, res) => {
+module.exports = async (req, res) => {
+  try{
+    connection = await mysql.createConnection(dbconfig);
+  }catch(e){console.log(e)}
   console.log("SUCCESS.JS");
   const payerId = req.query.PayerID;
   const paymentId = req.query.paymentId;
@@ -22,43 +22,22 @@ module.exports = (req, res) => {
         amount: custPayment.transactions[0].amount
       }
     ]
-  };
-  paypal.payment.execute(paymentId, execute_payment_json, function(
-    error,
-    payment
-  ) {
+  }
+  paypal.payment.execute(paymentId, execute_payment_json, function(error,payment) {
     if (error) {
       throw error;
     } else {
       data = JSON.stringify(payment);
       let uuid = uuidv1();
       uuid = String(uuid);
-      connection.query(
-        "INSERT INTO orders (orderNumber, orderDate, status, product, payment, keytext, customerNumber) VALUES(?,?,?,?,?,?,?)",
-        [
-          uuid,
-          null,
-          "complete",
-          purchaseItem.productName,
-          data,
-          purchaseItem.productKey,
-          req.user.id
-        ],
-        (a, b, c) => {
-          connection.query(
-            `
-        UPDATE products
-        SET salesOrder = ?
-        WHERE productCode = ?`,
-            [uuid, purchaseItem.productCode],
-            (a, b, c) => {
-              req.session.purchaseItem = ''
-              req.session.payment=''
-              res.redirect("/home");
-            }
-          );
-        }
-      );
-    }
-  });
-};
+        connection.query("INSERT INTO orders (orderNumber, orderDate, status, product, payment, keytext, customerNumber) VALUES(?,?,?,?,?,?,?)",[uuid,null,"complete",purchaseItem.productName,data,purchaseItem.productKey,req.user.id])
+        .then(resp=>{
+          connection.query(`UPDATE products SET salesOrder = ? WHERE productCode = ?`, [uuid, purchaseItem.productCode])
+          res.redirect('/home')
+        })
+
+
+  }
+
+    })
+  }

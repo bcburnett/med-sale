@@ -1,18 +1,12 @@
-const mysql = require("mysql");
-const dbconfig = require("../config/database");
-const connection = mysql.createConnection(dbconfig.connection);
-connection.query("USE " + dbconfig.database);
+const mysql = require("promise-mysql");
+const dbconfig = require("../config/database").config;
 
-
-
-module.exports = function(req,res){
-  console.log(req.session.rank)
-    let rank = req.body.role
-    let id = req.body.id
-    console.log(rank,id)
-
-  connection.query(`update attributes set rank = ? where userid = ? `,[rank,id] ,(e,r) => {
-    console.log(JSON.stringify(r),e)
-    res.send('success')
-  })
+module.exports = async function(req,res){
+  const connection = await mysql.createConnection(dbconfig);
+  let rank = req.body.role
+  let id = req.body.id
+  const attrib = await connection.query(`update attributes set rank = ? where userid = ? `,[rank,id])
+  const cust = await connection.query(`update customers set vendor = '' where customerNumber = ? `,[id])
+  console.log(attrib,cust)
+  res.send('success')
 }

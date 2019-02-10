@@ -8,14 +8,7 @@ var app = express();
 var MySQLStore = require('express-mysql-session')(session);
 var port = process.env.PORT || 8080;
 
-var dboptions = {
-  host:'mysql-medsale-6080.nodechef.com',
-  port:'2483',
-  user:'ncuser_6864',
-  password:'95wJOfOPkfxQGgTAkSmalq5cHHknA4',
-  database: 'medsale'
-};
-var sessionStore = new MySQLStore(dboptions);
+var sessionStore = new MySQLStore(require('./config/database').config);
 
 
 
