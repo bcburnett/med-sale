@@ -1,24 +1,18 @@
-const mysql = require("mysql");
-const dbconfig = require("../config/database");
-const connection = mysql.createConnection(dbconfig.connection);
-connection.query("USE " + dbconfig.database);
+const mysql = require('promise-mysql');
+const dbconfig = require("../config/database").config;
 
+module.exports = async function(res,req){
 
+  const connection = await mysql.createConnection(dbconfig)
 
-module.exports = function(res,req){
-console.log(req.user.id)
-  connection.query(`select users.username, users.id, attributes.rank from users inner join attributes on users.id = attributes.userid `, (e,r) => {
-    connection.query(`select * from products where productVendor =?`,
-      [req.user.id],
-      (err, row, fields) => {
-    console.log(JSON.parse(JSON.stringify(r)))
-    res.render('admin',{
-      message:'',
-      users:r,
-      name: req.user.username,
-      data:row
-    })
+  const users = await connection.query(`select users.username, users.id, attributes.rank from users inner join attributes on users.id = attributes.userid `)
+  const products = await connection.query(`select * from products where productVendor =?`, [req.user.id])
+  const orders = await connection.query(`select orderNumber, orderDate, keytext, product from orders where customerNumber =?`,[req.user.id])
+  res.render('admin',{
+    message:'',
+    name: req.user.username,
+    products,
+    users,
+    orders
   })
-})
-
-}
+  }

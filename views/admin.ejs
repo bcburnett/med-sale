@@ -29,6 +29,25 @@
       </tr>
       <% } %>
     </table>
+    <% if(orders.length > 0) {%>
+      <h3>Your purchases</h3>
+      <table class="table">
+        <tr>
+          <th>product</th>
+          <th>orderNumber</th>
+          <th>orderDate</th>
+          <th>keytext</th>
+
+        </tr>
+        <% for({orderNumber, orderDate, keytext, product} of orders) {%>
+        <tr>
+          <td><%= product %></td>
+          <td title="<%= orderNumber %>"><%= orderNumber.substring(0,10)+'...' %></td>
+          <td><%= orderDate.toString().substring(3,15) %></td>
+          <td><%= keytext %></td>
+        </tr>
+        <% }} %>
+      </table>
     <h3>Your Products</h3>
     <table class="table">
       <tr>
@@ -40,7 +59,7 @@
         <th> buyPrice </th>
         <th> salesOrder </th>
       </tr>
-      <% for({productCode,productName , productKey, productVendor,productDescription ,buyPrice ,salesOrder} of data) {%>
+      <% for({productCode,productName , productKey, productVendor,productDescription ,buyPrice ,salesOrder} of products) {%>
       <tr>
         <td><%= productCode %></td>
         <td><%= productName %></td>
