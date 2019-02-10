@@ -29,7 +29,7 @@
     </div>
     <div class="form-group">
       <label>Address Line 2</label>
-      <input type="text" class="form-control" name="address2" id="address2" value="<%= body.address2 %>"required>
+      <input type="text" class="form-control" name="address2" id="address2" value="<%= body.address2 %>">
     </div>
     <div class="form-group">
       <label>City</label>
@@ -100,6 +100,10 @@
   <label>Zip Code</label>
   <input type="text" class="form-control" name="zip" id="zip" value="<%= body.zip %>"required>
 </div>
+<div class="form-group">
+		<label>Vendor?</label>
+		<input type="checkbox" class="form-control" name="vendor" id="vendor" required>
+	</div>
     <button type="submit" class="btn btn-succcess btn-lg">Submit</button>
    </form>
 

@@ -3,17 +3,19 @@ const dbconfig = require("../config/database");
 const ppconfig = require("../config/paypal");
 const paypal = require("paypal-rest-sdk");
 
+
 const connection = mysql.createConnection(dbconfig.connection);
 connection.query("USE " + dbconfig.database);
 paypal.configure(ppconfig);
 
 module.exports = (req, res) => {
   let product = req.body.product;
-
+  const baseurl=req.protocol+"://"+req.headers.host
   connection.query(
     `select * from products where salesOrder = 'null' and productName = ? limit 1 `,
     [product],
     (e, r, f) => {
+
       if (!r[0]) {
         req.session.message = "We're sorry We are out of Stock";
         res.redirect("/home");
@@ -28,8 +30,8 @@ module.exports = (req, res) => {
           payment_method: "paypal"
         },
         redirect_urls: {
-          return_url: "http://localhost:8080/success",
-          cancel_url: "http://localhost:8080/home"
+          return_url: baseurl+'/success',
+          cancel_url: baseurl+'/cancel'
         },
         transactions: [
           {

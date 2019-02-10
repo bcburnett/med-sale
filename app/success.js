@@ -39,9 +39,9 @@ module.exports = (req, res) => {
           uuid,
           null,
           "complete",
-          req.session.purchaseItem.productName,
+          purchaseItem.productName,
           data,
-          req.session.purchaseItem.productKey,
+          purchaseItem.productKey,
           req.user.id
         ],
         (a, b, c) => {
@@ -50,8 +50,10 @@ module.exports = (req, res) => {
         UPDATE products
         SET salesOrder = ?
         WHERE productCode = ?`,
-            [uuid, req.session.purchaseItem.productCode],
+            [uuid, purchaseItem.productCode],
             (a, b, c) => {
+              req.session.purchaseItem = ''
+              req.session.payment=''
               res.redirect("/home");
             }
           );

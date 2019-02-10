@@ -1,8 +1,14 @@
 
 module.exports = function(app, passport) {
+
  app.get('/', function(req, res){
-  res.render('index.ejs');
+
+    res.render('index.ejs');
+
+
  });
+
+
 
  app.get('/login', function(req, res){
   res.render('login.ejs', {message:req.flash('loginMessage')});
@@ -14,6 +20,7 @@ module.exports = function(app, passport) {
   failureFlash: true
  }),
   function(req, res){
+    console.log(req.body.button)
    if(req.body.remember){
     req.session.cookie.maxAge = 1000 * 60 * 10;
    }else{
@@ -35,6 +42,7 @@ module.exports = function(app, passport) {
  var profile = require('./profile')
  app.get('/profile', isLoggedIn, profile );
  const { check, validationResult } = require('express-validator/check');
+
  var updateProfile = require('./updateProfile')
  app.post('/profile', isLoggedIn, updateProfile );
 
@@ -53,6 +61,9 @@ app.get('/success',isLoggedIn,success)
 var venPost = require('./vendorProductAdd')
 app.post('/vendorProductAdd',isLoggedIn,venPost)
 
+var adminUpdateUserRole = require('./adminupdateUserRole')
+app.post('/adminupdateuser',isLoggedIn,adminUpdateUserRole)
+
 app.get('/cancel', (req, res) => res.redirect('/wf'));
 
  app.get('/logout', function(req,res){
@@ -66,6 +77,5 @@ app.get('/cancel', (req, res) => res.redirect('/wf'));
 function isLoggedIn(req, res, next){
  if(req.isAuthenticated())
   return next();
-
  res.redirect('/');
 }
