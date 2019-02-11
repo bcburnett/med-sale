@@ -7,7 +7,7 @@
    <a href="/logout">LOGOUT</a>
    <a href="/store">GO TO STORE</a>
 
-
+   <% if(data.length > 0) { %>
    <h3>Your Products</h3>
     <table class="table">
       <tr>
@@ -19,7 +19,7 @@
         <th> buyPrice </th>
         <th> salesOrder </th>
       </tr>
-      <% if(data.length > 0) {for({productCode,productName , productKey, productVendor,productDescription ,buyPrice ,salesOrder} of data) {%>
+      <% for({productCode,productName , productKey, productVendor,productDescription ,buyPrice ,salesOrder} of data) {%>
       <tr>
         <td><%= productCode %></td>
         <td><%= productName %></td>

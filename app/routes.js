@@ -1,4 +1,8 @@
 
+const { body,validationResult } = require('express-validator/check');
+const { sanitizeBody } = require('express-validator/filter');
+const validateProfile = require('./profileValidator')
+const validateProduct = require('./vendorProductValidator')
 module.exports = function(app, passport) {
 
  app.get('/', function(req, res){
@@ -41,10 +45,9 @@ module.exports = function(app, passport) {
 
  var profile = require('./profile')
  app.get('/profile', isLoggedIn, profile );
- const { check, validationResult } = require('express-validator/check');
 
  var updateProfile = require('./updateProfile')
- app.post('/profile', isLoggedIn, updateProfile );
+ app.post('/profile',validateProfile, isLoggedIn, updateProfile );
 
 var home = require('./home');
 app.get('/home', isLoggedIn,home );
@@ -59,7 +62,7 @@ var success = require('./success');
 app.get('/success',isLoggedIn,success)
 
 var venPost = require('./vendorProductAdd')
-app.post('/vendorProductAdd',isLoggedIn,venPost)
+app.post('/vendorProductAdd',validateProduct,isLoggedIn,venPost)
 
 var adminUpdateUserRole = require('./adminupdateUserRole')
 app.post('/adminupdateuser',isLoggedIn,adminUpdateUserRole)
