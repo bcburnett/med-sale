@@ -18,6 +18,7 @@ module.exports = function(req, res){
         (?,  JSON_ARRAY("read", "purchase", "comment"), "user", 0)`, [req.user.id],(err,row,fields)=>console.log(err,row[0],fields))
     }
   })
+
  res.render('profile.ejs', {
   name:req.user.name,
   user:req.user,

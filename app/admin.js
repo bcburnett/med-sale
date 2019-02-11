@@ -2,7 +2,7 @@ const mysql = require('promise-mysql');
 const dbconfig = require("../config/database").config;
 
 module.exports = async function(res,req){
-
+  if(req.session.rank !== 'admin'){res.redirect("/home");return}
   const connection = await mysql.createConnection(dbconfig)
   const users = await connection.query(`
   SELECT users.username, users.id, attributes.rank, customers.vendor

@@ -6,6 +6,7 @@ let value
 const Joi = require('joi');
 
 module.exports = async function(req, res) {
+  if(req.session.rank === 'user'){res.send("unauthorized");return}
   let row=[]
 let b = req.body;
 
