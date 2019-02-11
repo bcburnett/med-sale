@@ -4,7 +4,7 @@
       <% if(message.length > 0) { %>
         <div class="alert alert-danger"><%= message %></div>
        <% } %>
-   <h2>allmost done, we just need some more information</h2>
+   <h2>allmost done, <% name %> we just need some more information</h2>
 
    <form action="/profile" method="post"  name="myForm">
     <div class="form-group">
@@ -19,9 +19,11 @@
       <label>E-Mail</label>
       <input type="email" class="form-control" name="email" id="email" value="<%= body.email %>"required>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
       <label>Phone</label>
-      <input type="phone" class="form-control" name="phone" id="phone" value="<%= body.phone %>"required>
+			<input class="form-control col-2 " type="number"  name="phone1" id="phone1" value="<%= body.phone1 %>"required maxlength="3"  >
+			<input class="form-control  col-2" type="number"  name="phone2" id="phone2" value="<%= body.phone2 %>"required maxlength="3" >
+			<input class="form-control  col-2" type="number"  name="phone3" id="phone3" value="<%= body.phone3 %>"required maxlength="4" >
     </div>
     <div class="form-group">
       <label>Address Line 1</label>
@@ -102,14 +104,12 @@
 </div>
 <div class="form-group">
 		<label>Vendor?</label>
-		<input type="checkbox" class="form-control" name="vendor" id="vendor" required>
+		<input type="checkbox" class="form-control" name="vendor" id="vendor" >
 	</div>
     <button type="submit" class="btn btn-succcess btn-lg">Submit</button>
    </form>
 
    <hr>
-
-   <p>Need an account <a href="/signup">Register</a></p>
    <p>Go Back <a href="/">Home</a>.</p>
   </div>
  </div>

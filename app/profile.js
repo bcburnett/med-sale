@@ -19,6 +19,7 @@ module.exports = function(req, res){
     }
   })
  res.render('profile.ejs', {
+  name:req.user.name,
   user:req.user,
   message:['Thank You For Registering'],
   body:req.body

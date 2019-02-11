@@ -11,10 +11,10 @@ module.exports = async function(req, res) {
 
   var connection = await mysql.createConnection(dbconfig);
   const cn = await connection.query(`select customerNumber from customers where customerNumber =?`,[req.user.id]);
-  console.log(cn)
-  if (!cn) {
+  console.log("cn",JSON.stringify(cn))
+  if (!cn[0]) {
     res.render("profile", {
-      user: req.user,
+      name: req.user.name,
       message: ["Thank You For Registering"],
       body: req.body
     });
@@ -37,27 +37,25 @@ module.exports = async function(req, res) {
 
   async function renderStore () {
 
-    parser.parseURL('https://rss.medicalnewstoday.com/medical_devices.xml')
-    .then(async(feed,ed)=>{
-    // console.log(feed)
+
     req.session.next = "";
     var connection = await mysql.createConnection(dbconfig);
     const orders = await connection.query(
       `select orderNumber, orderDate, keytext, product from orders where customerNumber =?`,
       [req.user.id]
     );
-    console.log(feed)
+
     res.render("store", {
       data: orders,
       rank: req.session.rank,
       name: req.user.username || "name",
       message: req.session.message || "",
-      feed: JSON.stringify(feed) || "--feed--"
-    });
+      rss: req.session.rss || "--rss--"
+    })
 
     req.session.message = "";
 
-    }).catch(e=> console.log(e))
+
 
   }
 

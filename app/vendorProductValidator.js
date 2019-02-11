@@ -5,7 +5,7 @@ module.exports= [
 check("productName").not().isEmpty(),
 check("productKey").not().isEmpty(),
 check("productDescription").not().isEmpty(),
-check("buyPrice", ).not().isNumeric()
+check("buyPrice").isNumeric()
 ];
 
 

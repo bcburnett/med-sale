@@ -47,7 +47,7 @@ module.exports = function(app, passport) {
  app.get('/profile', isLoggedIn, profile );
 
  var updateProfile = require('./updateProfile')
- app.post('/profile',validateProfile, isLoggedIn, updateProfile );
+ app.post('/profile', isLoggedIn, updateProfile );
 
 var home = require('./home');
 app.get('/home', isLoggedIn,home );
