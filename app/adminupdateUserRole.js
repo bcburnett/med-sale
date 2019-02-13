@@ -11,7 +11,7 @@ module.exports = async function(req,res){
   // update the users rank and clear the vendor request flag
   const attrib = await connection.query(`update attributes set rank = ? where userid = ? `,[rank,id])
   const cust = await connection.query(`update customers set vendor = '' where customerNumber = ? `,[id])
-  console.log(attrib,cust)
+
 
   //return success
   res.send('success')

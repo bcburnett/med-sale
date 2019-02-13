@@ -14,7 +14,6 @@ module.exports = async function(req,res){
   const user = await connection.query(`delete from products where productVendor = ? `,[id])
   const products = await connection.query(`delete from users where id = ? `,[id])
   const subscriptions = await connection.query(`delete from subscriptions where customerNumber = ? `,[id])
-  console.log(attrib,cust,user,products,subscriptions)
 
   // return success
   res.send('success')

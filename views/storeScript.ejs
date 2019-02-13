@@ -1,4 +1,11 @@
 <script>
+/**
+ * ! This script expects to find:
+ * ! an element with an id of 'feed' and an attribute: data-id set to the users id
+ * ! an element with the id of 'bookmarkdiv'
+ */
+
+
   let feed = document.querySelector("#feed");
   let id = feed.getAttribute("data-id");
   let bookmarkdiv = document.querySelector('#bookmarkdiv')
@@ -27,7 +34,7 @@
 
     if(!confirm('Add category '+category+' to your subscriptions?'))return
 
-    console.log(id, category);
+
 
     rsubscriptions.push({'category':category})
     sessionStorage.setItem(
@@ -93,7 +100,6 @@
       .then(res => res.text())
       .then(text => {
         setView()});
-    console.log("DELETING", category,subscriptions);
   };
 
   /**
@@ -104,7 +110,6 @@
  const setView = (filter)=>{
     view = filter||view
     if(view === 'filter'){filterItems();return}
-    console.log("filter items");
     let rssfeed = sessionStorage.getItem("rssfeed");
     rssfeed = JSON.parse(rssfeed);
     let subscriptions = sessionStorage.getItem("subscriptions");
@@ -124,7 +129,6 @@
     let subscriptions = json.subscriptions;
     subscriptions = subscriptions.map(e => e.category);
     let rssfeed = json.feed;
-    console.log(subscriptions, rssfeed);
     rssDisplay = rssfeed
       .map(item => {
         let categories = item.categories[0]._.split("/");
@@ -164,14 +168,11 @@
  * ! filters the rss feed based on the users subscriptions
  */
   const filterItems = () => {
-    console.log("filter items");
     let rssfeed = sessionStorage.getItem("rssfeed");
     rssfeed = JSON.parse(rssfeed);
-    console.log("rssfeed", rssfeed);
     let subscriptions = sessionStorage.getItem("subscriptions");
     mysubscriptions = JSON.parse(subscriptions);
     subscriptions = mysubscriptions.map(e => e.category);
-    console.log("subscriptions", subscriptions);
 
     let filteredFeed = rssfeed.filter(item => {
       let categories = item.categories[0]._.split("/")
@@ -185,7 +186,6 @@
           if (subscriptions.indexOf(e) !== -1) return true;
           return false;
         });
-      console.log(categories.length, "categories");
       if (categories.length > 0) return true;
       return false;
     });
@@ -201,7 +201,6 @@
   const renderBookmarks = ()=>{
     bookmarks = sessionStorage.getItem('bookmarks')
     bookmarks = JSON.parse(bookmarks)
-    console.log(bookmarks)
     let output =''
     for({exerpt,link,id,title,guid} of bookmarks){
       let bookmark = String.raw`
@@ -213,7 +212,6 @@
       output+=bookmark
 
     }
-console.log(output)
     document.querySelector('#bookmarkdiv').innerHTML=output
   }
 
@@ -227,8 +225,12 @@ console.log(output)
     let id = feed.getAttribute("data-id");
     let rssfeed = sessionStorage.getItem("rssfeed");
     rssfeed = JSON.parse(rssfeed);
-    let article = rssfeed.filter(art=>art.guid ===item.guid )[0]
-    console.log(id)
+
+    let article = rssfeed.reduce((acc,art)=>{
+      if(art.guid ===item.guid){acc=art};
+       return acc},{} )
+
+
     let data ={
         id,
         link: article.link,
@@ -236,8 +238,13 @@ console.log(output)
         guid:article.guid,
         title:article.title
       }
-      let bookmarks=sessionStorage.getItem('bookmarks')
-      bookmarks = JSON.parse(bookmarks)
+
+      if(JSON
+        .parse(sessionStorage.getItem('bookmarks'))
+        .map(e=>e.guid)
+        .indexOf(data.guid) !== -1)return
+
+
       bookmarks.push(data)
       sessionStorage.setItem("bookmarks", JSON.stringify(bookmarks));
     fetch("/savearticle", {
@@ -306,7 +313,6 @@ console.log(output)
     })
       .then(res => res.json())
       .then(json => {
-        console.log(json);
         sessionStorage.setItem("rssfeed", JSON.stringify(json.feed));
         sessionStorage.setItem("subscriptions",JSON.stringify(json.subscriptions));
         sessionStorage.setItem("bookmarks", JSON.stringify(json.bookmarks));

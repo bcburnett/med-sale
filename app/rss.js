@@ -6,7 +6,6 @@ let Parser = require('rss-parser');
 let parser = new Parser();
 
 module.exports = async function(req, res){
-console.log(req.user)
  let rssurl = req.body.feed || 'https://rss.medicalnewstoday.com/featurednews.xml'
 
 

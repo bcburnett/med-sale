@@ -10,7 +10,6 @@ module.exports = async (req, res) => {
   try{
     connection = await mysql.createConnection(dbconfig);
   }catch(e){console.log(e)}
-  console.log("SUCCESS.JS");
   const payerId = req.query.PayerID;
   const paymentId = req.query.paymentId;
   const purchaseItem = req.session.purchaseItem;

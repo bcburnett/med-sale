@@ -98,7 +98,6 @@ module.exports = async function(req, res){
   errors = await Joi.validate(b, schema,{abortEarly:false,escapeHtml:true}, (err, value) => {
     if(err){
       errors = 'error'
-      console.log(JSON.stringify(err))
       errorReturn(JSON.stringify(err.details.map(e=>e.message).join(' \n '))); return errors
     }
   })
@@ -110,9 +109,7 @@ module.exports = async function(req, res){
 
   try {
     const del = await connection.query(` delete  from customers where customerNumber =?`,[req.user.id]).catch((e)=>{console.log(e,'ERROR UPDATEPROFILEJS LINE 80')})
-  } catch (error) {
-
-  }
+  } catch (error) {}
 
   const customer = await connection.query(`INSERT INTO customers (customerNumber, customerName, contactLastName, contactFirstName, email, phone, addressLine1, addressLine2, city, state, postalCode,vendor,country) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?,?)`, [req.user.id,b.firstname+' '+b.lastname,b.lastname,b.firstname,b.email,b.phone,b.address1, b.address2 , b.city, b.state, b.zip, b.vendor,b.country]).catch((e)=>{console.log(e,'ERROR UPDATEPROFILEJS LINE 85')})
 

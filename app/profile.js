@@ -7,7 +7,6 @@ connection.query('USE ' + dbconfig.database);
 module.exports = function(req, res){
   connection.query(`
   select * from attributes where attributes.userid =?`,[req.user.id],(err,row,fields)=>{
-    console.log(err,row[0],fields)
     if(!row[0]){
       req.session.infoGathered = false
       connection.query(`
@@ -15,7 +14,7 @@ module.exports = function(req, res){
       attributes
         (userid, privileges, rank, infoGathered)
       VALUES
-        (?,  JSON_ARRAY("read", "purchase", "comment"), "user", 0)`, [req.user.id],(err,row,fields)=>console.log(err,row[0],fields))
+        (?,  JSON_ARRAY("read", "purchase", "comment"), "user", 0)`, [req.user.id])
     }
   })
   req.session.message = 'Welcome back '+ req.user.username+',Thank You For Registering '

@@ -24,7 +24,6 @@ module.exports = async function(req, res) {
   // get the users rank
   let dbrank = await connection.query(`select rank from attributes where userid =?`,[req.user.id]);
   dbrank = JSON.parse(JSON.stringify(dbrank))[0].rank
-   console.log(dbrank)
   rank = req.session.next || dbrank
   req.session.rank = dbrank;
 

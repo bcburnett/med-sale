@@ -6,7 +6,6 @@ let errors
 module.exports = async function(req, res){
   connection = await mysql.createConnection(dbconfig).catch(e=>console.log(e));
   let customers = await connection.query(` select * from customers where customerNumber =?`,[req.user.id]).catch((e)=>{console.log(e,'ERROR UPDATEPROFILEJS LINE 87')})
-  console.log(customers[0])
   customers = customers[0]
   body={
     lastname: customers.contactLastName ,

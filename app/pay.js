@@ -13,7 +13,6 @@ module.exports = async (req, res) => {
   try{  connection = await mysql.createConnection(dbconfig)} catch (e){console.log(e,'ERROR PAYJS LINE 12')}
 
   let product = req.body.product;
-  console.log(req.headers.host)
   baseurl="https://"+req.headers.host
 
 
@@ -23,7 +22,6 @@ module.exports = async (req, res) => {
     const products = await connection.query(`select * from products where salesOrder = 'null' and productName = ? limit 1 `,[product])
     const unblock = await connection.query(`UPDATE products SET salesOrder = ? WHERE productCode = ?`, ['inprogress', products[0].productCode])
 
-    console.log(products)
       if (!products[0]) {
         req.session.message = "We're sorry We are out of Stock";
         res.redirect("/home");
