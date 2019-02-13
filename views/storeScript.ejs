@@ -1,11 +1,12 @@
 <h2>Bookmarks</h2>
     <p id="bookmarkdiv" ></p>
 
+<hr>
 
     <h2>Rss Feed</h2>
     <p>select feed</p>
 
-
+<hr>
     <select name="rssfeed" id="rssfeed" onchange="getRss(this.value)">
       <% feeds.forEach(feed=>{%>
       <option value="<%=feed.link%>"><%= feed.feed %></option>

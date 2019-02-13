@@ -39,5 +39,5 @@ dependencies
   "uuid": "^3.3.2"
  }
 ```
-
+updating to sequilize
 
