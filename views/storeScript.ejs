@@ -1,8 +1,27 @@
+<h2>Bookmarks</h2>
+    <p id="bookmarkdiv" ></p>
+
+
+    <h2>Rss Feed</h2>
+    <p>select feed</p>
+
+
+    <select name="rssfeed" id="rssfeed" onchange="getRss(this.value)">
+      <% feeds.forEach(feed=>{%>
+      <option value="<%=feed.link%>"><%= feed.feed %></option>
+      <%})%>
+    </select>
+
+
+    <p id="feed" data-id="<%= id%>"></p>
+
 <script>
+
 /**
  * ! This script expects to find:
  * ! an element with an id of 'feed' and an attribute: data-id set to the users id
  * ! an element with the id of 'bookmarkdiv'
+ * ! and an object with the feeds passed into the parent template see rssfeed.js
  */
 
 

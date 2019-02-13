@@ -48,75 +48,58 @@ module.exports = function(app, passport) {
   /**
    @host /profile
  */
+ app.get('/ghwnu746gjkew8get3fgew19gedr', isLoggedIn, require('./profile'));
 
- var profile = require('./profile')
- app.get('/ghwnu746gjkew8get3fgew19gedr', isLoggedIn, profile );
+ app.get('/updateProfile', isLoggedIn,require('./updateProfile'));
 
- var updateProfile = require('./updateProfile')
- app.get('/updateProfile', isLoggedIn, updateProfile );
-
- var saveProfile = require('./saveProfile')
- app.post('/profile', isLoggedIn, saveProfile );
+ app.post('/profile', isLoggedIn, require('./saveProfile'));
 
    /**
    @host /rss
  */
 
- var rss = require('./rss');
- app.post('/rss', isLoggedIn,rss );
+app.post('/rss', isLoggedIn, require('./rss'));
 
-var saveArticle = require('./savearticle')
-app.post('/savearticle',isLoggedIn,saveArticle)
+app.post('/savearticle',isLoggedIn,require('./savearticle'))
 
-var unsaveArticle = require('./unsavearticle')
-app.delete('/unsavearticle',isLoggedIn,unsaveArticle)
+app.delete('/unsavearticle',isLoggedIn,require('./unsavearticle'))
 
-var customerSubscribe = require('./subscribe')
-app.post('/subscribe',isLoggedIn,customerSubscribe)
+app.post('/subscribe',isLoggedIn,require('./subscribe'))
 
-var customerUnsubscribe = require('./unsubscribe')
-app.delete('/unsubscribe',isLoggedIn,customerUnsubscribe)
+app.delete('/unsubscribe',isLoggedIn,require('./unsubscribe'))
 
 /**
    @host /admin
  */
 
-var adminUpdateUserRole = require('./adminupdateUserRole')
-app.put('/adminupdateuser',isLoggedIn,adminUpdateUserRole)
+app.put('/adminupdateuser',isLoggedIn,require('./adminupdateUserRole'))
 
-var adminDeleteUser = require('./adminDeleteUser')
-app.delete('/admindeleteuser',isLoggedIn,adminDeleteUser)
+app.delete('/admindeleteuser',isLoggedIn,require('./adminDeleteUser'))
 
 /**
    @host /paypal
  */
-var pay = require('./pay');
-app.post('/pay', isLoggedIn,pay );
+app.post('/pay', isLoggedIn,require('./pay'));
 
-var success = require('./success');
-app.get('/success',isLoggedIn,success)
+app.get('/success',isLoggedIn,require('./success'))
 
-var cancel = require('./cancel');
-app.get('/cancel',isLoggedIn,cancel)
+app.get('/cancel',isLoggedIn,require('./cancel'))
 
 /**
    @host /home
  */
-var home = require('./home');
-app.get('/home', isLoggedIn,home );
+app.get('/home', isLoggedIn,require('./home'));
 
 
 /**
    @host /store
  */
-var store = require('./storeRedirect');
-app.get('/store', isLoggedIn,store );
+app.get('/store', isLoggedIn,require('./storeRedirect'));
 
 /**
    @host /vendor
  */
-var venPost = require('./vendorProductAdd')
-app.post('/vendorProductAdd',isLoggedIn,venPost)
+app.post('/vendorProductAdd',isLoggedIn,require('./vendorProductAdd'))
 
 /**
    @host /logout

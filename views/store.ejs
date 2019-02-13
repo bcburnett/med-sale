@@ -43,22 +43,7 @@
     <script type="text/javascript" src="https://www.medicalnewstoday.com/extnews.php?custom=y&id=118554&h=5&b=ddddff&fc=000000&fs=2&sb=n&c=0"></script>
 
 
-    <h2>Bookmarks</h2>
-    <p id="bookmarkdiv" ></p>
 
-
-    <h2>Rss Feed</h2>
-    <p>select feed</p>
-
-
-    <select name="rssfeed" id="rssfeed" onchange="getRss(this.value)">
-      <% feeds.forEach(feed=>{%>
-      <option value="<%=feed.link%>"><%= feed.feed %></option>
-      <%})%>
-    </select>
-
-
-    <p id="feed" data-id="<%= id%>"></p>
 
 
     <%- include storeScript.ejs %>
