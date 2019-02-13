@@ -1,6 +1,6 @@
 module.exports=[
 
-{"feed":"Google News", "link":"http://news.google.com/news?ned=us&topic=h&output=rss"},
+
 {"feed":"MNT Featured Headlines","link":"https://rss.medicalnewstoday.com/featurednews.xml"},
 
 {"feed":"Abortion","link":"https://rss.medicalnewstoday.com/abortion.xml"},
