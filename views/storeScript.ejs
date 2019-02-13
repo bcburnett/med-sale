@@ -1,0 +1,319 @@
+<script>
+  let feed = document.querySelector("#feed");
+  let id = feed.getAttribute("data-id");
+  let bookmarkdiv = document.querySelector('#bookmarkdiv')
+  let view = 'all';
+
+
+
+/**
+ * @function {buttonClick}{/app/storeScript.ejs}
+ * @param {{{number}}} {{id}} {{userid}}
+ * @param {{{string}}} {{category}} {{selected category}}
+ * @param {{{HtmlElement}}} {{elem}} {{the element that called this function}}
+ * ! if the user isn't subscribed to a category this function prompts the user to
+ * ! subscribe, and on a positive response adds the category to the session storage
+ * ! array and sends a request to the database to add the category
+ */
+  const buttonClick = (id, category, elem) => {
+    let rsubscriptions = sessionStorage.getItem("subscriptions");
+    rsubscriptions = JSON.parse(rsubscriptions);
+    subscriptions = rsubscriptions.map(e => e.category);
+
+    if (subscriptions.indexOf(category) !== -1) {
+      deleteSubscription(id, category, elem);
+      return;
+    }
+
+    if(!confirm('Add category '+category+' to your subscriptions?'))return
+
+    console.log(id, category);
+
+    rsubscriptions.push({'category':category})
+    sessionStorage.setItem(
+          "subscriptions",
+          JSON.stringify(rsubscriptions)
+        );
+
+    fetch("/subscribe", {
+      method: "POST", // *GET, POST, PUT, DELETE, etc.
+      credentials: "same-origin", // include, *same-origin, omit
+      headers: {
+        "Content-Type": "application/json"
+        // "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: JSON.stringify({
+        id,
+        category
+      }) // body data type must match "Content-Type" header
+    })
+      .then(res => res.text())
+      .then(text => {
+
+        setView()});
+    return;
+  };
+
+
+/**
+ * @function {deleteSubscription}{/app/storeScript.ejs}
+ * @param {{{number}}} {{id}} {{userid}}
+ * @param {{{string}}} {{category}} {{selected category}}
+ * @param {{{HtmlElement}}} {{elem}} {{the element that called this function}}
+ * ! if the user is subscribed to a category this function prompts the user to
+ * ! unsubscribe, and on a positive response removes the category from the session storage
+ * ! array and sends a request to the database to remove the category
+ */
+  const deleteSubscription = (id, category, elem) => {
+    let subscriptions = sessionStorage.getItem("subscriptions");
+    subscriptions = JSON.parse(subscriptions);
+    let rssfeed = sessionStorage.getItem("rssfeed");
+    rssfeed = JSON.parse(rssfeed);
+
+    if (!confirm("delete subscription for " + category + "?")) return;
+
+    subscriptions = subscriptions.filter(e=>e.category!==category)
+    sessionStorage.setItem(
+          "subscriptions",
+          JSON.stringify(subscriptions)
+        );
+
+        fetch("/unsubscribe", {
+      method: "DELETE", // *GET, POST, PUT, DELETE, etc.
+      credentials: "same-origin", // include, *same-origin, omit
+      headers: {
+        "Content-Type": "application/json"
+        // "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: JSON.stringify({
+        id,
+        category
+      }) // body data type must match "Content-Type" header
+    })
+      .then(res => res.text())
+      .then(text => {
+        setView()});
+    console.log("DELETING", category,subscriptions);
+  };
+
+  /**
+ * @function {setView}{/app/storeScript.ejs}
+ * @param {{{string}}} {{filter}} {{'filter or 'all'}}
+ * ! calls either renderRss or filterItems based on the value of filter
+ */
+ const setView = (filter)=>{
+    view = filter||view
+    if(view === 'filter'){filterItems();return}
+    console.log("filter items");
+    let rssfeed = sessionStorage.getItem("rssfeed");
+    rssfeed = JSON.parse(rssfeed);
+    let subscriptions = sessionStorage.getItem("subscriptions");
+    subscriptions = JSON.parse(subscriptions);
+    if(view === 'filter'){filterItems();return}
+    renderRss({'feed':rssfeed, subscriptions})
+  }
+
+/**
+ * @function {renderRss}{/app/storeScript.ejs}
+ * @param {{{Object}}} {{json}} {{Object containing the feed and category arrays}}
+ * ! renders the rss feed view and inserts it into the web page
+ */
+  const renderRss = json => {
+    let feed = document.querySelector("#feed");
+  let id = feed.getAttribute("data-id");
+    let subscriptions = json.subscriptions;
+    subscriptions = subscriptions.map(e => e.category);
+    let rssfeed = json.feed;
+    console.log(subscriptions, rssfeed);
+    rssDisplay = rssfeed
+      .map(item => {
+        let categories = item.categories[0]._.split("/");
+        let itemhtml =`
+        <h2> ${item.title} </h2>
+        <p> ${item.content}</p>
+        <a href='${item.link}' target='about:blank'>Continue Reading</a>
+        `
+        return ( itemhtml
+         +`<button onclick="saveItem({'guid':'${item.guid}','id':${id}})">Save Article</button>`+
+          categories
+            .map(c => {
+              let e = c.replace("'", "");
+              e = e.trim();
+              e = e.replace(/ /g, "");
+              return `
+        <button
+          onclick = "buttonClick('${id.trim()}','${e.trim()}',this)"
+          class="${
+            subscriptions.indexOf(e) === -1 ? "btn-info" : "btn-success"
+          }"
+          >${e.trim()}</button>`;
+            })
+            .join(" ")
+        );
+      })
+      .join(" ");
+    feed.innerHTML =
+      `<button onclick = "setView('filter')">view my subscriptions</button>` +
+      `<button onclick = "setView('all')">view all items</button>` +
+      rssDisplay;
+    return;
+  };
+
+/**
+ * @function {FilterItems}{/app/storeScript.ejs}
+ * ! filters the rss feed based on the users subscriptions
+ */
+  const filterItems = () => {
+    console.log("filter items");
+    let rssfeed = sessionStorage.getItem("rssfeed");
+    rssfeed = JSON.parse(rssfeed);
+    console.log("rssfeed", rssfeed);
+    let subscriptions = sessionStorage.getItem("subscriptions");
+    mysubscriptions = JSON.parse(subscriptions);
+    subscriptions = mysubscriptions.map(e => e.category);
+    console.log("subscriptions", subscriptions);
+
+    let filteredFeed = rssfeed.filter(item => {
+      let categories = item.categories[0]._.split("/")
+        .map(c => {
+          let e = c.replace("'", "");
+          e = e.trim();
+          e = e.replace(/ /g, "");
+          return e;
+        })
+        .filter(e => {
+          if (subscriptions.indexOf(e) !== -1) return true;
+          return false;
+        });
+      console.log(categories.length, "categories");
+      if (categories.length > 0) return true;
+      return false;
+    });
+    renderRss({ feed: filteredFeed, subscriptions: mysubscriptions });
+  };
+
+
+
+  /**
+ * @function {renderBookmarks}{/app/storeScript.ejs}
+ * ! renders the users bookmarks to the web page
+ */
+  const renderBookmarks = ()=>{
+    bookmarks = sessionStorage.getItem('bookmarks')
+    bookmarks = JSON.parse(bookmarks)
+    console.log(bookmarks)
+    let output =''
+    for({exerpt,link,id,title,guid} of bookmarks){
+      let bookmark = String.raw`
+      <p>${title}</p>
+      <p>${exerpt}</p>
+      <a href="${link}" target="about:blank">Continue Reading</a>
+      <button onclick="delart('${guid}')">Delete</button>
+      `
+      output+=bookmark
+
+    }
+console.log(output)
+    document.querySelector('#bookmarkdiv').innerHTML=output
+  }
+
+  /**
+ * @function {saveItem}{/app/storeScript.ejs}
+ * @param {{{Object}}} {{item}} {{ Object containing the item to be saved}}
+ * ! saves the item to the bookmarks array and the bookmarks table in the database
+ */
+ const saveItem=(item)=>{
+    let feed = document.querySelector("#feed");
+    let id = feed.getAttribute("data-id");
+    let rssfeed = sessionStorage.getItem("rssfeed");
+    rssfeed = JSON.parse(rssfeed);
+    let article = rssfeed.filter(art=>art.guid ===item.guid )[0]
+    console.log(id)
+    let data ={
+        id,
+        link: article.link,
+        exerpt:article.content,
+        guid:article.guid,
+        title:article.title
+      }
+      let bookmarks=sessionStorage.getItem('bookmarks')
+      bookmarks = JSON.parse(bookmarks)
+      bookmarks.push(data)
+      sessionStorage.setItem("bookmarks", JSON.stringify(bookmarks));
+    fetch("/savearticle", {
+      method: "POST", // *GET, POST, PUT, DELETE, etc.
+      credentials: "same-origin", // include, *same-origin, omit
+      headers: {
+        "Content-Type": "application/json"
+        // "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: JSON.stringify(data) // body data type must match "Content-Type" header
+    })
+      .then(res => res.text())
+      .then(text => {
+        renderBookmarks()
+        setView()});
+
+  }
+
+  /**
+ * @function {delart}{/app/storeScript.ejs}
+ * @param {{{string}}} {{guid}} {{guid of the article to remove}}
+ * ! removes an article from the bookmarks array and updates the database
+ */
+  const delart =(guid)=>{
+    let feed = document.querySelector("#feed");
+    let id = feed.getAttribute("data-id");
+    bookmarks = sessionStorage.getItem('bookmarks')
+    bookmarks = JSON.parse(bookmarks)
+    bookmarks =bookmarks.filter(b=>b.guid!==guid)
+    sessionStorage.setItem("bookmarks", JSON.stringify(bookmarks));
+    renderBookmarks()
+    fetch("/unsavearticle", {
+      method: "DELETE", // *GET, POST, PUT, DELETE, etc.
+      credentials: "same-origin", // include, *same-origin, omit
+      headers: {
+        "Content-Type": "application/json"
+        // "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: JSON.stringify({
+        id,
+        guid
+      }) // body data type must match "Content-Type" header
+    })
+      .then(res => res.text())
+      .then(text => true);
+  }
+
+
+
+  /**
+ * @function {getRss}{/app/storeScript.ejs}
+ * @param {{{string}}} {{feed}} {{optional address to an rss feed}}
+ * ! retrieves and sets the users categories, bookmarks, and current rss feed in session storage
+ */
+  const getRss = (feed) => {
+    fetch("/rss",{
+      method: "post", // *GET, POST, PUT, DELETE, etc.
+      credentials: "same-origin", // include, *same-origin, omit
+      headers: {
+        "Content-Type": "application/json"
+        // "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: JSON.stringify({
+        feed
+      }) // body data type must match "Content-Type" header
+    })
+      .then(res => res.json())
+      .then(json => {
+        console.log(json);
+        sessionStorage.setItem("rssfeed", JSON.stringify(json.feed));
+        sessionStorage.setItem("subscriptions",JSON.stringify(json.subscriptions));
+        sessionStorage.setItem("bookmarks", JSON.stringify(json.bookmarks));
+
+        renderRss(json);
+        renderBookmarks(json.bookmarks)
+      });
+  };
+  getRss();
+</script>

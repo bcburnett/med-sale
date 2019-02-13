@@ -1,8 +1,26 @@
-<%- include header.ejs %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <meta http-equiv="X-UA-Compatible" content="ie=edge">
+ <title>Med-sale Website</title>
+ <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css" >
+ <link rel="stylesheet" href="style.css" >
+ <!-- PayPal BEGIN --> <script> ;(function(a,t,o,m,s){a[m]=a[m]||[];a[m].push({t:new Date().getTime(),event:'snippetRun'});var f=t.getElementsByTagName(o)[0],e=t.createElement(o),d=m!=='paypalDDL'?'&m='+m:'';e.async=!0;e.src='https://www.sandbox.paypal.com/tagmanager/pptm.js?id='+s+d;f.parentNode.insertBefore(e,f);})(window,document,'script','paypalDDL','52f6b5f3-262e-4c9d-bfa1-9829841735ce'); </script> <!-- PayPal END -->
+
+ <style>
+  html{
+   padding:50px;
+  }
+ </style>
+</head>
+<body>
  <div class="container">
   <div class="jumbotron text-center">
    <a href="/login" class="btn btn-lg btn-success">Login</a>
    <a href="/signup" class="btn btn-lg btn-info">Register</a>
   </div>
  </div>
- <%- include footer.ejs %>
+</body>
+ </html>

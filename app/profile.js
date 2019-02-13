@@ -18,11 +18,12 @@ module.exports = function(req, res){
         (?,  JSON_ARRAY("read", "purchase", "comment"), "user", 0)`, [req.user.id],(err,row,fields)=>console.log(err,row[0],fields))
     }
   })
-
+  req.session.message = 'Welcome back '+ req.user.username+',Thank You For Registering '
  res.render('profile.ejs', {
   name:req.user.name,
   user:req.user,
-  message:['Thank You For Registering'],
+  message:req.session.message.message ||'',
   body:req.body
  })
+ req.session.message = ''
 }

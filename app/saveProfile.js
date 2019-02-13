@@ -58,6 +58,7 @@ module.exports = async function(req, res){
 
     city: Joi
     .string()
+    .max(255)
     .required()
     .error(errors => {
       return {
@@ -94,11 +95,11 @@ module.exports = async function(req, res){
   });
 
   // validate the request data against the schema
-  errors = await Joi.validate(b, schema,{'abortEarly':false}, (err, value) => {
+  errors = await Joi.validate(b, schema,{abortEarly:false,escapeHtml:true}, (err, value) => {
     if(err){
       errors = 'error'
       console.log(JSON.stringify(err))
-      errorReturn(JSON.stringify(err.details.map(e=>e.message))); return errors
+      errorReturn(JSON.stringify(err.details.map(e=>e.message).join(' \n '))); return errors
     }
   })
 
@@ -121,6 +122,7 @@ module.exports = async function(req, res){
 
 
   function errorReturn (message){
+
     res.render('profile.ejs', {
       message:message || '',
       body:req.body,

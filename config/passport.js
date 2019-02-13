@@ -27,12 +27,12 @@ module.exports = function(passport) {
    passReqToCallback: true
   },
   function(req, username, password, done){
-   connection.query("SELECT * FROM users WHERE username = ? ", 
+   connection.query("SELECT * FROM users WHERE username = ? ",
    [username], function(err, rows){
     if(err)
      return done(err);
     if(rows.length){
-     return done(null, false, req.flash('signupMessage', 'That is already taken'));
+      return done(null, false, req.flash('signupMessage', 'That is already taken'))
     }else{
      var newUserMysql = {
       username: username,

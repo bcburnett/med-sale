@@ -1,8 +1,6 @@
 <%- include header.ejs %>
-<h2>Welcome back <%= name %></h2>
-<% if(message.length > 0) { %>
-  <div class="alert alert-danger"><%= message %></div>
- <% } %>
+
+
 
     <form action="/pay" method="post">
       <select name="product" id="product" >
@@ -12,10 +10,14 @@
     <h2>Buy For $25.00</h2>
       <input type="submit" value="Buy" />
     </form>
+
+
     <a href="/logout">LOGOUT</a> |
     <a href="/updateProfile">Update Profile</a>
     <% if(rank != 'user') { %>
     | <a href="/home">BACK TO CONTROL PANEL</a>
+
+
     <% } %>
     <% if(data.length > 0) {%>
     <h3>Your purchases</h3>
@@ -37,12 +39,27 @@
       <% }} %>
     </table>
 
-    <p id="feed"></p>
 
-    <script>
-      feed = document.querySelector('#feed')
-      fetch('/rss')
-      .then(res=>res.text())
-      .then(text=> feed.innerHTML=text)
-    </script>
+    <script type="text/javascript" src="https://www.medicalnewstoday.com/extnews.php?custom=y&id=118554&h=5&b=ddddff&fc=000000&fs=2&sb=n&c=0"></script>
+
+
+    <h2>Bookmarks</h2>
+    <p id="bookmarkdiv" ></p>
+
+
+    <h2>Rss Feed</h2>
+    <p>select feed</p>
+
+
+    <select name="rssfeed" id="rssfeed" onchange="getRss(this.value)">
+      <% feeds.forEach(feed=>{%>
+      <option value="<%=feed.link%>"><%= feed.feed %></option>
+      <%})%>
+    </select>
+
+
+    <p id="feed" data-id="<%= id%>"></p>
+
+
+    <%- include storeScript.ejs %>
     <%- include footer.ejs %>

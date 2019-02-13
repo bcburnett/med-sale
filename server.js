@@ -40,7 +40,10 @@ app.use(session({
     secret: 'justasecret',
     store: sessionStore,
     resave: true,
-    saveUninitialized: true
+    saveUninitialized: false,
+    cookie: {
+       maxAge:86400000 //24 hrs
+      }
 }));
 
 

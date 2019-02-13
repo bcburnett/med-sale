@@ -1,10 +1,6 @@
 <%- include header.ejs %>
  <div class="container">
   <div class="col-sm-6 col-sm-offset-3">
-      <% if(message.length > 0) { %>
-        <div class="alert alert-danger"><%= message %></div>
-       <% } %>
-   <h2>allmost done, <% name %> we just need some more information</h2>
 
    <form action="/profile" method="post"  name="myForm">
     <div class="form-group">

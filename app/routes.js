@@ -1,18 +1,18 @@
 
-const { body,validationResult } = require('express-validator/check');
-const { sanitizeBody } = require('express-validator/filter');
-const validateProfile = require('./profileValidator')
-const validateProduct = require('./vendorProductValidator')
 module.exports = function(app, passport) {
+
+  /**
+   @host /root
+ */
 
  app.get('/', function(req, res){
     res.render('index.ejs');
  });
 
- /**
-   Login handlers
- */
 
+  /**
+   @host /Login
+ */
  app.get('/login', function(req, res){
   res.render('login.ejs', {message:req.flash('loginMessage')});
  });
@@ -23,17 +23,17 @@ module.exports = function(app, passport) {
   failureFlash: true
  }),
   function(req, res){
-    console.log(req.body.button)
+    console.log(req.body.remember)
    if(req.body.remember){
-    req.session.cookie.maxAge = 1000 * 60 * 10;
+    req.session.cookie.maxAge = 30 * 24 * 60 * 60 * 1000;
    }else{
     req.session.cookie.expires = false;
    }
-   res.redirect('/');
+   res.redirect('/home');
   });
 
-   /**
-   Sign Up handlers
+  /**
+   @host /Sign_Up_handlers
  */
 
  app.get('/signup', function(req, res){
@@ -56,36 +56,79 @@ module.exports = function(app, passport) {
  var updateProfile = require('./updateProfile')
  app.get('/updateProfile', isLoggedIn, updateProfile );
 
-
  var saveProfile = require('./saveProfile')
  app.post('/profile', isLoggedIn, saveProfile );
 
+   /**
+   @host /rss
+ */
+
  var rss = require('./rss');
- app.get('/rss', isLoggedIn,rss );                                  // NON SECURE ROUTE
+ app.post('/rss', isLoggedIn,rss );
 
-var home = require('./home');
-app.get('/home', isLoggedIn,home );
+var saveArticle = require('./savearticle')
+app.post('/savearticle',isLoggedIn,saveArticle)
 
-var store = require('./storeRedirect');
-app.get('/store', isLoggedIn,store );
+var unsaveArticle = require('./unsavearticle')
+app.delete('/unsavearticle',isLoggedIn,unsaveArticle)
 
-var venPost = require('./vendorProductAdd')
-app.post('/vendorProductAdd',validateProduct,isLoggedIn,venPost)
+var customerSubscribe = require('./subscribe')
+app.post('/subscribe',isLoggedIn,customerSubscribe)
+
+var customerUnsubscribe = require('./unsubscribe')
+app.delete('/unsubscribe',isLoggedIn,customerUnsubscribe)
+
+/**
+   @host /admin
+ */
 
 var adminUpdateUserRole = require('./adminupdateUserRole')
-app.post('/adminupdateuser',isLoggedIn,adminUpdateUserRole)
+app.put('/adminupdateuser',isLoggedIn,adminUpdateUserRole)
 
+var adminDeleteUser = require('./adminDeleteUser')
+app.delete('/admindeleteuser',isLoggedIn,adminDeleteUser)
+
+/**
+   @host /paypal
+ */
 var pay = require('./pay');
 app.post('/pay', isLoggedIn,pay );
 
 var success = require('./success');
 app.get('/success',isLoggedIn,success)
 
-app.get('/cancel', (req, res) => res.redirect('/home'));
+var cancel = require('./cancel');
+app.get('/cancel',isLoggedIn,cancel)
+
+/**
+   @host /home
+ */
+var home = require('./home');
+app.get('/home', isLoggedIn,home );
+
+
+/**
+   @host /store
+ */
+var store = require('./storeRedirect');
+app.get('/store', isLoggedIn,store );
+
+/**
+   @host /vendor
+ */
+var venPost = require('./vendorProductAdd')
+app.post('/vendorProductAdd',isLoggedIn,venPost)
+
+/**
+   @host /logout
+ */
 
  app.get('/logout', function(req,res){
+  req.session.destroy(function (err) {
+    req.user = null;
   req.logout();
   res.redirect('/');
+});
  })
 };
 

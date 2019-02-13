@@ -20,10 +20,10 @@ module.exports = async function(req, res){
     zip: customers.postalCode,
     country: customers.country,
     vendor: customers.vendor}
-
+    req.session.message='Welcome back '+ req.user.username+' Please update your profile here'
   res.render('profile',{
     body:body,
     name:req.user.username,
-    message:'Update Profile'
+    message: req.session.message || "",
   })
 }

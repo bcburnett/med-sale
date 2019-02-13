@@ -1,9 +1,5 @@
 <%- include header.ejs %>
 
-      <% if(message.length > 0) { %>
-        <div class="alert alert-danger"><%= message %></div>
-       <% } %>
-   <h2>Welcome back <%= name %></h2>
    <a href="/logout">LOGOUT</a> |
    <a href="/store">GO TO STORE</a> |
    <a href="/updateProfile">Update Profile</a>
@@ -13,6 +9,8 @@
         <th> user name </th>
         <th> rank </th>
         <th> id </th>
+        <th> vend </th>
+        <th> delete </th>
       </tr>
       <% for({username,rank,id,vendor} of users) {%>
       <tr>
@@ -23,10 +21,10 @@
               <option value="vendor"<%= (rank === 'vendor')? 'selected':'' %> >vendor</option>
               <option value="admin"<%= (rank === 'admin')? 'selected':'' %> >admin</option>
             </select>
-
           </td>
           <td><%= id %></td>
           <td><%= vendor %></td>
+          <td><button onclick="deleteUser(<%= id %>)">Delete</button></td>
       </tr>
       <% } %>
     </table>
@@ -85,12 +83,11 @@
     <% })%>
     <button type="submit" class="btn btn-succcess btn-lg">Submit</button>
    </form>
-
 <script>
 function updateUserRank(roll,id){
 console.log(JSON.stringify({roll,id}))
 fetch('/adminupdateuser', {
-    method: 'POST',
+    method: 'PUT',
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json'
@@ -101,5 +98,20 @@ fetch('/adminupdateuser', {
   })
 }).then(e=>location.reload())
  }
+
+ function deleteUser(id){
+  if(!confirm('you are about to delete user: '+id)) return
+  fetch('/admindeleteuser', {
+    method: 'DELETE',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+     body: JSON.stringify({
+      'id': id
+  })
+}).then(e=>location.reload())
+ }
 </script>
+
  <%- include footer.ejs %>

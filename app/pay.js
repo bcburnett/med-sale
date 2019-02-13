@@ -17,7 +17,12 @@ module.exports = async (req, res) => {
   baseurl="https://"+req.headers.host
 
 
+
+
+    // get the product key
     const products = await connection.query(`select * from products where salesOrder = 'null' and productName = ? limit 1 `,[product])
+    const unblock = await connection.query(`UPDATE products SET salesOrder = ? WHERE productCode = ?`, ['inprogress', products[0].productCode])
+
     console.log(products)
       if (!products[0]) {
         req.session.message = "We're sorry We are out of Stock";
@@ -53,7 +58,7 @@ module.exports = async (req, res) => {
               currency: "USD",
               total: r.buyPrice
             },
-            description: r.productName
+            description: [r.productName, r.productVendor].join(' , ')
           }
         ]
       };
