@@ -196,17 +196,21 @@ socket.on('feedDeleted', data => {
     let subscriptions = json.subscriptions;
     subscriptions = subscriptions.map(e => e.category);
     let rssfeed = json.feed;
+    let categories
     rssDisplay = rssfeed
       .map(item => {
-        let categories = item.categories[0]._.split("/");
+        if(item.categories){
+        if(item.categories){categories = item.categories}
+        if(item.categories[0]._)  {categories =  item.categories[0]._.split("/")  }
+      }
         let itemhtml =`
         <h2> ${item.title} </h2>
-        <p> ${item.content}</p>
+        <p> ${item.content.trim().substring(0,2000)}</p>
         <a href='${item.link}' target='about:blank'>Continue Reading</a>
         `
-        return ( itemhtml
-         +`<button onclick="saveItem({'guid':'${item.guid}','id':${id}})">Save Article</button>`+
-          categories
+        let categoryButtons = ''
+        if(categories){
+        categoryButtons = categories
             .map(c => {
               let e = c.replace("'", "");
               e = e.trim();
@@ -218,8 +222,13 @@ socket.on('feedDeleted', data => {
             subscriptions.indexOf(e) === -1 ? "btn-info" : "btn-success"
           }"
           >${e.trim()}</button>`;
-            })
-            .join(" ")
+            }).join(" ")
+          }
+
+        return ( itemhtml
+         +`<button onclick="saveItem({'guid':'${item.guid}','id':${id}})">Save Article</button>`+
+         categoryButtons
+
         );
       })
       .join(" ");
@@ -242,8 +251,13 @@ socket.on('feedDeleted', data => {
     subscriptions = mysubscriptions.map(e => e.category);
 
     let filteredFeed = rssfeed.filter(item => {
-      let categories = item.categories[0]._.split("/")
-        .map(c => {
+      let categories=[]
+      if(item.categories){
+        if(item.categories){categories = item.categories}
+        if(item.categories[0]._)  {categories =  item.categories[0]._.split("/")  }
+      }
+
+      categories.map(c => {
           let e = c.replace("'", "");
           e = e.trim();
           e = e.replace(/ /g, "");
@@ -301,7 +315,7 @@ socket.on('feedDeleted', data => {
     let data ={
         id,
         link: article.link,
-        exerpt:article.content,
+        exerpt:article.content.trim().substring(0,250)+'...',
         guid:article.guid,
         title:article.title
       }
