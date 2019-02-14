@@ -7,9 +7,10 @@
     <label>select feed</label>
 
 
-    <select name="rssfeed" id="rssfeed" onchange="getRss(this.value)">
-      <% feeds.forEach(feed=>{%>
-      <option value="<%=feed.url%>"><%= feed.title %></option>
+    <select name="rssfeed" id="rssfeed" oninput="getRss(this.value)">
+      <option >Select Feed</option>
+      <% feeds.forEach((feed,index)=>{%>
+      <option value="<%=feed.url%>" <%= index===0?'selected':'' %> > <%= feed.title %></option>
       <%})%>
     </select>
 
@@ -46,10 +47,18 @@ socket.on('feedDeleted', data => {
   while(select.hasChildNodes()){
     select.firstChild.remove()
   }
-  for({title,url} of data){
+
   let option = document.createElement('option')
+  option.innerHTML='Select Feed'
+  option.setAttribute('value','')
+  select.appendChild(option)
+  let x = 0
+  for({title,url} of data){
+  option = document.createElement('option')
   option.innerHTML=title
   option.setAttribute('value',url)
+  if(x==0) option.setAttribute('select', true)
+  x=1
   select.appendChild(option)
   }
   snackbar('rss feed deleted')
@@ -182,6 +191,7 @@ socket.on('feedDeleted', data => {
  * ! renders the rss feed view and inserts it into the web page
  */
   const renderRss = json => {
+    if(!json)return
     let feed = document.querySelector("#feed");
   let id = feed.getAttribute("data-id");
     let subscriptions = json.subscriptions;
