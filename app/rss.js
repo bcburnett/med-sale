@@ -6,10 +6,13 @@ let Parser = require('rss-parser');
 let parser = new Parser();
 
 module.exports = async function(req, res){
-  let rssurl = req.body.feed || 'https://rss.medicalnewstoday.com/featurednews.xml'
+connection = await mysql.createConnection(dbconfig).catch( (e)=>{console.log(e,'ERROR UPDATEPROFILEJS LINE 8')})
+myfeeds = await connection.query(`select * from rssfeeds limit 1`)
+console.log(myfeeds[0])
+  let rssurl = req.body.rssfeed || myfeeds[0].url
 
 
-  connection = await mysql.createConnection(dbconfig).catch( (e)=>{console.log(e,'ERROR UPDATEPROFILEJS LINE 8')})
+
   let feed = await parser.parseURL(rssurl);
   let subscriptions= await connection.query(`select category from subscriptions where customerNumber = ?`,[req.user.id]).catch(e=>console.log(e))
   let bookmarks = await connection.query(`select * from savedarticles where customerNumber = ?`,[req.user.id]).catch(e=>console.log(e))
