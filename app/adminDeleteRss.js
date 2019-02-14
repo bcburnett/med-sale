@@ -14,4 +14,6 @@ module.exports = async function(req,res){
 
   // return success
   res.send('success')
+  myfeeds = await connection.query(`select * from rssfeeds`)
+  req.app.io.emit('feedDeleted',myfeeds );
 }

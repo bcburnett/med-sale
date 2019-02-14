@@ -73,13 +73,11 @@ server.listen(port);
 console.log("Port: " + port);
 console.log(app.mountpath)
 
-io.on('connection', socket => {
+// io.on('connection', socket => {
 
+//   socket.on('hello', data => {
+//     console.log('hello',data)
+//        socket.broadcast.emit('hello', data)
+//   })
 
-
-  socket.on('hello', data => {
-    console.log('hello',data)
-       socket.broadcast.emit('hello', data)
-  })
-
-})
+// })

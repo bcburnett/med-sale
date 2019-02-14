@@ -27,6 +27,21 @@ socket.on('hello', data => {
   select.appendChild(option)
 })
 
+socket.on('feedDeleted', data => {
+  console.log(data)
+  let select = document.querySelector('#rssfeed')
+  while(select.hasChildNodes()){
+    select.firstChild.remove()
+  }
+  for({title,url} of data){
+  let option = document.createElement('option')
+  option.innerHTML=title
+  option.setAttribute('value',url)
+  select.appendChild(option)
+  }
+})
+
+
 /**
  * ! This script expects to find:
  * ! an element with an id of 'feed' and an attribute: data-id set to the users id
