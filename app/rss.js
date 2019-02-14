@@ -23,8 +23,7 @@ console.log(myfeeds[0])
   categories = [] // categories initial value
 
   feed.items.forEach(item => {
-
-    if(item.categories[0]._){cats =item.categories[0]._.split('/')} else {cats = item.categories}
+    cats =item.categories[0]._.split('/') // split the categories field on the /
     cats.forEach(e=>{
       let c = e.replace("'","")
             c=c.trim()
