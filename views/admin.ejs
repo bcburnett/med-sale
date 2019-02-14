@@ -27,10 +27,36 @@
           <td><button onclick="deleteUser(<%= id %>)">Delete</button></td>
       </tr>
       <% } %>
+
+
     </table>
 
+      <h3>Rss feeds</h3>
+      <table class="table">
+        <tr>
+          <th>Feed Title</th>
+          <th>Feed Url</th>
+          <th>Delete Feed</th>
 
+        </tr>
+        <% for({title,url,id} of feed) {%>
+        <tr>
+          <td><%= title %></td>
+          <td><%= url %></td>
+          <td><button onclick="deleteFeed(<%= id %>)">Delete</button> %></td>
+        </tr>
+        <% } %>
+      </table>
 
+      <div class="form-group">
+        <label>Title</label>
+        <input type="text" class="form-control" name="title"id="title" >
+       </div>
+       <div class="form-group">
+        <label>Url</label>
+        <input type="text" class="form-control" name="url"id="url" >
+       </div>
+      <button onclick="addFeed()">Save</button>
 
 
     <% if(orders.length > 0) {%>
@@ -88,6 +114,8 @@
     <% })%>
     <button type="submit" class="btn btn-succcess btn-lg">Submit</button>
    </form>
+
+
 <script>
 function updateUserRank(roll,id){
 console.log(JSON.stringify({roll,id}))
@@ -115,6 +143,36 @@ fetch('/adminupdateuser', {
      body: JSON.stringify({
       'id': id
   })
+}).then(e=>location.reload())
+ }
+
+ function deleteFeed (id,title){
+   if(!confirm('you are about to delete feed: '+title)) return
+   fetch('/admindeleterss', {
+    method: 'DELETE',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+     body: JSON.stringify({
+      id
+  })
+}).then(e=>location.reload())
+ }
+
+ function addFeed(){
+  title = document.querySelector('#title').value
+  if(!title)return
+  url = document.querySelector('#url').value
+  if(!url)return
+  if(!confirm('you are about to add feed: '+title)) return
+fetch('/adminaddrss', {
+    method: 'PUT',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+     body: JSON.stringify({url,title})
 }).then(e=>location.reload())
  }
 </script>

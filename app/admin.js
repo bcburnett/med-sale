@@ -15,7 +15,7 @@ module.exports = async function(res,req){
   ON users.id = attributes.userid
   INNER JOIN customers
   ON users.id = customerNumber`)
-
+  const feed = await connection.query(`select * from rssfeeds`).catch(e=>console.log(e))
   // get the admin's products
   const products = await connection.query(`select * from products where productVendor =?`, [req.user.id])
   // get the admin's purchases
@@ -29,7 +29,8 @@ req.session.message='Welcome back '+ req.user.username
     name: req.user.username,
     products,
     users,
-    orders
+    orders,
+    feed
   })
 
   //reset the message

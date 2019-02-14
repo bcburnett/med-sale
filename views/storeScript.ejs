@@ -9,7 +9,7 @@
 
     <select name="rssfeed" id="rssfeed" onchange="getRss(this.value)">
       <% feeds.forEach(feed=>{%>
-      <option value="<%=feed.link%>"><%= feed.feed %></option>
+      <option value="<%=feed.url%>"><%= feed.title %></option>
       <%})%>
     </select>
 

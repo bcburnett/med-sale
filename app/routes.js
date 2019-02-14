@@ -76,6 +76,10 @@ app.put('/adminupdateuser',isLoggedIn,require('./adminupdateUserRole'))
 
 app.delete('/admindeleteuser',isLoggedIn,require('./adminDeleteUser'))
 
+app.delete('/admindeleterss',isLoggedIn,require('./adminDeleteRss'))
+
+app.put('/adminaddrss',isLoggedIn,require('./adminAddRss'))
+
 /**
    @host /paypal
  */

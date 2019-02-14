@@ -1,7 +1,6 @@
 var mysql = require("promise-mysql");
 var dbconfig = require("../config/database").config;
 var handleAdmin = require("./admin");
-var rssfeeds = require("./rssfeeds");
 
 module.exports = async function(req, res) {
 
@@ -26,7 +25,7 @@ module.exports = async function(req, res) {
   dbrank = JSON.parse(JSON.stringify(dbrank))[0].rank
   rank = req.session.next || dbrank
   req.session.rank = dbrank;
-
+  let rssfeeds = await connection.query(`select * from rssfeeds`).catch(e=>console.log(e))
   //decide where to send the user
   if (rank === "user") {
     renderStore();
