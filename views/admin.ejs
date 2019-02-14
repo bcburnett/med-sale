@@ -147,6 +147,7 @@ fetch('/adminupdateuser', {
  }
 
  function deleteFeed (id,title){
+   title = document.querySelector('#title').value
    if(!confirm('you are about to delete feed: '+title)) return
    fetch('/admindeleterss', {
     method: 'DELETE',

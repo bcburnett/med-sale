@@ -15,9 +15,21 @@
 
 
     <p id="feed" data-id="<%= id%>"></p>
+
+    <div id="snackbar">Some text some message..</div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
 <script>
+function snackbar(message) {
+  // Get the snackbar DIV
+  var x = document.getElementById("snackbar");
+  x.innerHTML=message
+  // Add the "show" class to DIV
+  x.className = "show";
 
+  // After 3 seconds, remove the show class from DIV
+  setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+}
 const socket = io.connect('/')
 socket.on('hello', data => {
   let select = document.querySelector('#rssfeed')
@@ -25,6 +37,7 @@ socket.on('hello', data => {
   option.innerHTML=data.title
   option.setAttribute('value',data.url)
   select.appendChild(option)
+  snackbar('rss feed added')
 })
 
 socket.on('feedDeleted', data => {
@@ -39,6 +52,7 @@ socket.on('feedDeleted', data => {
   option.setAttribute('value',url)
   select.appendChild(option)
   }
+  snackbar('rss feed deleted')
 })
 
 
