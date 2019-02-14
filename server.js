@@ -10,6 +10,7 @@ var https = require('https')
 var MySQLStore = require('express-mysql-session')(session);
 var port = process.env.PORT || 8080;
 var fs = require('fs')
+const socket = require('socket.io')
 
 var httpsOptions = {
   cert:fs.readFileSync('./ssh/cert.pem'),
@@ -65,6 +66,19 @@ app.use(flash());
 app.use(expressValidator())
 
 require('./app/routes.js')(app, passport);
-https.createServer(httpsOptions,app).listen(port);
+var server = https.createServer(httpsOptions,app)
+const io = socket(server)
+server.listen(port);
 console.log("Port: " + port);
 console.log(app.mountpath)
+
+io.on('connection', socket => {
+
+
+
+  socket.on('hello', data => {
+    console.log('hello',data)
+       socket.broadcast.emit('hello', data)
+  })
+
+})
