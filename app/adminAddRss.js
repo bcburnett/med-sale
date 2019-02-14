@@ -9,7 +9,9 @@ module.exports = async function(req,res){
   let title = req.body.title
   let url = req.body.url
   // insert the new rss feed
-  const attrib = await connection.query(`insert into rssfeeds (title,url) values(?, ?)`,[title,url])
+  try{
+  const attrib = await connection.query(`insert into rssfeeds (title,url) values(?, ?)`,[title,url]).catch(e=>console.log((e.code)))
+  } catch(e){console.log(e.code)}
   //return success
   res.send('success')
 }
