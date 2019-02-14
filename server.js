@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 var express = require('express');
 var session = require('express-session');
 var expressValidator =require('express-validator')
@@ -5,8 +6,16 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var morgan = require('morgan');
 var app = express();
+var https = require('https')
 var MySQLStore = require('express-mysql-session')(session);
 var port = process.env.PORT || 8080;
+var fs = require('fs')
+
+var httpsOptions = {
+  cert:fs.readFileSync('./ssh/cert.pem'),
+  key: fs.readFileSync('./ssh/key.pem'),
+  passphrase: 'password'
+}
 
 var sessionStore = new MySQLStore(require('./config/database').config);
 var favicon = require('serve-favicon')
@@ -56,7 +65,6 @@ app.use(flash());
 app.use(expressValidator())
 
 require('./app/routes.js')(app, passport);
-
-app.listen(port);
+https.createServer(httpsOptions,app).listen(port);
 console.log("Port: " + port);
 console.log(app.mountpath)
