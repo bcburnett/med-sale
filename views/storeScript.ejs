@@ -22,9 +22,7 @@ const socket = io.connect('/')
 socket.on('hello', data => {
     console.log(data)
 })
-setInterval(() => {
-  socket.emit('hello','hello')
-}, 1000);
+
 /**
  * ! This script expects to find:
  * ! an element with an id of 'feed' and an attribute: data-id set to the users id

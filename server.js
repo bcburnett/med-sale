@@ -68,6 +68,7 @@ app.use(expressValidator())
 require('./app/routes.js')(app, passport);
 var server = https.createServer(httpsOptions,app)
 const io = socket(server)
+app.io = io
 server.listen(port);
 console.log("Port: " + port);
 console.log(app.mountpath)
