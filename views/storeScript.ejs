@@ -20,7 +20,11 @@
 
 const socket = io.connect('/')
 socket.on('hello', data => {
-    console.log(data)
+  let select = document.querySelector('#rssfeed')
+  let option = document.createElement('option')
+  option.innerHTML=data.title
+  option.setAttribute('value',data.url)
+  select.appendChild(option)
 })
 
 /**
@@ -341,7 +345,7 @@ socket.on('hello', data => {
         sessionStorage.setItem("rssfeed", JSON.stringify(json.feed));
         sessionStorage.setItem("subscriptions",JSON.stringify(json.subscriptions));
         sessionStorage.setItem("bookmarks", JSON.stringify(json.bookmarks));
-
+        sessionStorage.setItem("rssurl", JSON.stringify(json.rssurl));
         renderRss(json);
         renderBookmarks(json.bookmarks)
       });

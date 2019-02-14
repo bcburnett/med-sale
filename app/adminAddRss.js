@@ -14,5 +14,5 @@ module.exports = async function(req,res){
   } catch(e){console.log(e.code)}
   //return success
   res.send('success')
-  req.app.io.emit('hello',"message from add rss" );
+  req.app.io.emit('hello',{title,url} );
 }

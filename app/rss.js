@@ -16,7 +16,7 @@ console.log(myfeeds[0])
   let feed = await parser.parseURL(rssurl);
   let subscriptions= await connection.query(`select category from subscriptions where customerNumber = ?`,[req.user.id]).catch(e=>console.log(e))
   let bookmarks = await connection.query(`select * from savedarticles where customerNumber = ?`,[req.user.id]).catch(e=>console.log(e))
-  res.send(JSON.stringify({feed:feed.items,subscriptions,bookmarks})) // send it off to the browser
+  res.send(JSON.stringify({feed:feed.items,subscriptions,bookmarks,rssurl})) // send it off to the browser
 
   let storedCategories = await connection.query(`select category from categories`).catch(e=>true)
   storedCategories=storedCategories.map(e=>e.category)  //flattens the categories into an array of strings
