@@ -9,7 +9,10 @@ var MySQLStore = require('express-mysql-session')(session);
 var port = process.env.PORT || 8080;
 
 var sessionStore = new MySQLStore(require('./config/database').config);
+var favicon = require('serve-favicon')
+var path = require('path')
 
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
 
 
 var passport = require('passport');

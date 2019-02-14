@@ -13,7 +13,7 @@ module.exports = async (req, res) => {
   try{  connection = await mysql.createConnection(dbconfig)} catch (e){console.log(e,'ERROR PAYJS LINE 12')}
 
   let product = req.body.product;
-  baseurl="https://"+req.headers.host
+  baseurl="http://"+req.headers.host
 
 
 

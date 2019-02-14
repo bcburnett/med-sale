@@ -24,6 +24,7 @@
   "paypal-rest-sdk": "^1.8.1",
   "promise-mysql": "^3.3.1",
   "rss-parser": "^3.6.2",
+  "serve-favicon": "^2.5.0",
   "uuid": "^3.3.2"
  }
 }

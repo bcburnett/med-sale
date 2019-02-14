@@ -4,9 +4,9 @@
 <hr>
 
     <h2>Rss Feed</h2>
-    <p>select feed</p>
+    <label>select feed</label>
 
-<hr>
+
     <select name="rssfeed" id="rssfeed" onchange="getRss(this.value)">
       <% feeds.forEach(feed=>{%>
       <option value="<%=feed.link%>"><%= feed.feed %></option>
@@ -319,7 +319,7 @@
  * @param {{{string}}} {{feed}} {{optional address to an rss feed}}
  * ! retrieves and sets the users categories, bookmarks, and current rss feed in session storage
  */
-  const getRss = (feed) => {
+  const getRss = (rssfeed) => {
     fetch("/rss",{
       method: "post", // *GET, POST, PUT, DELETE, etc.
       credentials: "same-origin", // include, *same-origin, omit
@@ -328,7 +328,7 @@
         // "Content-Type": "application/x-www-form-urlencoded",
       },
       body: JSON.stringify({
-        feed
+        rssfeed
       }) // body data type must match "Content-Type" header
     })
       .then(res => res.json())
@@ -342,4 +342,5 @@
       });
   };
   getRss();
+
 </script>
