@@ -19,7 +19,7 @@
 
     <div id="snackbar">Some text some message..</div>
 
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
 <script>
 function snackbar(message) {
   // Get the snackbar DIV
@@ -31,6 +31,7 @@ function snackbar(message) {
   // After 3 seconds, remove the show class from DIV
   setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
 }
+const socket = io.connect('/')
 socket.on('hello', data => {
   let select = document.querySelector('#rssfeed')
   let option = document.createElement('option')
