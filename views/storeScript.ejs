@@ -199,7 +199,11 @@ socket.on('feedDeleted', data => {
     let rssfeed = json.feed;
     rssDisplay = rssfeed
       .map(item => {
-        let categories = item.categories[0]._.split("/");
+        let categories =[]
+        if(item.categories){
+        if(item.categories){categories = item.categories}
+        if(item.categories[0]._)  {categories =  item.categories[0]._.split("/")  }
+      }
         let itemhtml =`
         <h2> ${item.title} </h2>
         <p> ${item.content}</p>
@@ -243,7 +247,12 @@ socket.on('feedDeleted', data => {
     subscriptions = mysubscriptions.map(e => e.category);
 
     let filteredFeed = rssfeed.filter(item => {
-      let categories = item.categories[0]._.split("/")
+      let categories = []
+      if(item.categories){
+        if(item.categories){categories = item.categories}
+        if(item.categories[0]._)  {categories =  item.categories[0]._.split("/")  }
+      }
+      categories = categories
         .map(c => {
           let e = c.replace("'", "");
           e = e.trim();

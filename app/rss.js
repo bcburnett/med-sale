@@ -18,21 +18,5 @@ console.log(myfeeds[0])
   let bookmarks = await connection.query(`select * from savedarticles where customerNumber = ?`,[req.user.id]).catch(e=>console.log(e))
   res.send(JSON.stringify({feed:feed.items,subscriptions,bookmarks,rssurl})) // send it off to the browser
 
-  let storedCategories = await connection.query(`select category from categories`).catch(e=>true)
-  storedCategories=storedCategories.map(e=>e.category)  //flattens the categories into an array of strings
-  categories = [] // categories initial value
 
-  feed.items.forEach(item => {
-    cats =item.categories[0]._.split('/') // split the categories field on the /
-    cats.forEach(e=>{
-      let c = e.replace("'","")
-            c=c.trim()
-            c=c.replace(/ /g,"")
-      categories.push(c)
-    })   // build the category array
-  });
-
-  difference = categories.map(e=>e.trim()).filter(x =>  storedCategories.indexOf(x) === -1) // determine if there are new categories
-  // update the db if new categories are found
-  if(difference) {difference.forEach(async (e)=>{await connection.query(`INSERT INTO categories (category) values (?)`,[e]).catch(e=>console.log(e))})}
 }
